@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Project</string>
+    <string name="title_activity_main_page">MainPageActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="dash_tab_text_1">院系</string>
+    <string name="dash_tab_text_2">分类</string>
+    <string name="first_page_tab_text_1">关注</string>
+    <string name="first_page_tab_text_2">推荐</string>
+    <string name="first_page_tab_text_3">热点</string>
+    <string name="notifications_tab_text_1">回复</string>
+    <string name="notifications_tab_text_2">私聊</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
