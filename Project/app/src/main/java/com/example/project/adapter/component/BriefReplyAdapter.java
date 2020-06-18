@@ -1,4 +1,4 @@
-package com.example.project.adapter;
+package com.example.project.adapter.component;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,53 +10,47 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
-import com.example.project.component.Summary;
+import com.example.project.component.BriefReply;
 
 import java.util.List;
 
-public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHolder> {
-    private List<Summary> Summaries;
+public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.ViewHolder> {
+    private List<BriefReply> replies;
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView avatar;
         TextView username;
-        TextView date;
-        TextView title;
         TextView content;
 
-        public ViewHolder (View view) {
+        public ViewHolder(View view) {
             super(view);
             avatar = view.findViewById(R.id.avatar);
             username = view.findViewById(R.id.username);
-            date = view.findViewById(R.id.date);
-            title = view.findViewById(R.id.title);
             content = view.findViewById(R.id.content);
         }
-
     }
 
-    public SummaryAdapter(List<Summary> summaries) {
-        Summaries = summaries;
+    public BriefReplyAdapter(List<BriefReply> replies) {
+        this.replies = replies;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.component_summary, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.component_brief_reply, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Summary summary = Summaries.get(position);
-        holder.avatar.setImageResource(summary.imageId);
-        holder.username.setText(summary.username);
-        holder.date.setText(summary.date);
-        holder.title.setText(summary.title);
-        holder.content.setText(summary.content);
+        BriefReply reply = replies.get(position);
+        holder.avatar.setImageResource(reply.imageId);
+        holder.username.setText(reply.username);
+        holder.content.setText(reply.content);
     }
 
     @Override
     public int getItemCount() {
-        return Summaries.size();
+        return replies.size();
     }
 }

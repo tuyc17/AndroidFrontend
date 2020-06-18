@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.project.R;
 import com.example.project.component.BriefReply;
-import com.example.project.adapter.BriefReplyAdapter;
+import com.example.project.adapter.component.BriefReplyAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

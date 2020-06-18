@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.project.R;
 import com.example.project.component.Summary;
-import com.example.project.adapter.SummaryAdapter;
+import com.example.project.adapter.component.SummaryAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class RecommendFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        SummaryAdapter adapter = new SummaryAdapter(summaryList);
+        SummaryAdapter adapter = new SummaryAdapter(getActivity(), summaryList);
         recyclerView.setAdapter(adapter);
 
         return root;

@@ -1,5 +1,7 @@
-package com.example.project.adapter;
+package com.example.project.adapter.component;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.project.activity.ProfileActivity;
 import com.example.project.component.BriefUser;
 
 import com.example.project.R;
@@ -17,6 +20,7 @@ import java.util.List;
 
 public class BriefUserAdapter extends RecyclerView.Adapter<BriefUserAdapter.ViewHolder> {
     private List<BriefUser> users;
+    private Context context;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView avatar;
@@ -29,8 +33,9 @@ public class BriefUserAdapter extends RecyclerView.Adapter<BriefUserAdapter.View
         }
     }
 
-    public BriefUserAdapter(List<BriefUser> users) {
+    public BriefUserAdapter(Context context, List<BriefUser> users) {
         this.users = users;
+        this.context = context;
     }
 
     @NonNull
@@ -45,6 +50,14 @@ public class BriefUserAdapter extends RecyclerView.Adapter<BriefUserAdapter.View
         BriefUser user = users.get(position);
         holder.avatar.setImageResource(user.imageId);
         holder.username.setText(user.username);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(context, ProfileActivity.class);
+                context.startActivity(it);
+            }
+        });
     }
 
     @Override

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
-import com.example.project.adapter.BriefUserAdapter;
+import com.example.project.adapter.component.BriefUserAdapter;
 import com.example.project.component.BriefUser;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class FollowActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        BriefUserAdapter adapter = new BriefUserAdapter(users);
+        BriefUserAdapter adapter = new BriefUserAdapter(this, users);
         recyclerView.setAdapter(adapter);
 
     }
