@@ -1,5 +1,7 @@
 package com.example.project.adapter.component;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
+import com.example.project.activity.CommunicateActivity;
+import com.example.project.activity.ReplyDetailActivity;
 import com.example.project.component.BriefReply;
 
 import java.util.List;
 
 public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.ViewHolder> {
     private List<BriefReply> replies;
+    private Context context;
+    private int index;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView avatar;
@@ -30,8 +36,10 @@ public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.Vi
         }
     }
 
-    public BriefReplyAdapter(List<BriefReply> replies) {
+    public BriefReplyAdapter(Context context, int position, List<BriefReply> replies) {
         this.replies = replies;
+        this.context = context;
+        this.index = position;
     }
 
     @NonNull
@@ -47,6 +55,25 @@ public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.Vi
         holder.avatar.setImageResource(reply.imageId);
         holder.username.setText(reply.username);
         holder.content.setText(reply.content);
+
+        if(index == 0) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(context, ReplyDetailActivity.class);
+                    context.startActivity(it);
+                }
+            });
+        }
+        else {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(context, CommunicateActivity.class);
+                    context.startActivity(it);
+                }
+            });
+        }
     }
 
     @Override

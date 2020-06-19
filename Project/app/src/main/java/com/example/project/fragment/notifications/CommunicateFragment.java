@@ -19,9 +19,14 @@ import java.util.List;
 
 public class CommunicateFragment extends Fragment {
     private List<BriefReply> replies = new ArrayList<>();
+    private int position;
+
+    public CommunicateFragment(int index) {
+        this.position = index;
+    }
 
     public static CommunicateFragment newInstance(int index) {
-        CommunicateFragment fragment = new CommunicateFragment();
+        CommunicateFragment fragment = new CommunicateFragment(index);
         return fragment;
     }
 
@@ -39,7 +44,7 @@ public class CommunicateFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        BriefReplyAdapter adapter = new BriefReplyAdapter(replies);
+        BriefReplyAdapter adapter = new BriefReplyAdapter(getActivity(), position, replies);
         recyclerView.setAdapter(adapter);
 
         return root;

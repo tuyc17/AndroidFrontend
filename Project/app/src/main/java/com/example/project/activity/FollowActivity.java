@@ -52,7 +52,7 @@ public class FollowActivity extends AppCompatActivity {
 
     private void initUsers() {
         for(int i=0; i<10; i++) {
-            BriefUser user = new BriefUser(R.drawable.ic_launcher_background, "用户名称");
+            BriefUser user = new BriefUser(R.drawable.avatar1, "用户名称");
             users.add(user);
         }
     }

@@ -20,9 +20,14 @@ import java.util.List;
 
 public class ReplyFragment extends Fragment {
     private List<BriefReply> replies = new ArrayList<>();
+    private int position;
+
+    public ReplyFragment(int index) {
+        this.position = index;
+    }
 
     public static ReplyFragment newInstance(int index) {
-        ReplyFragment fragment = new ReplyFragment();
+        ReplyFragment fragment = new ReplyFragment(index);
         return fragment;
     }
 
@@ -35,7 +40,7 @@ public class ReplyFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        BriefReplyAdapter adapter = new BriefReplyAdapter(replies);
+        BriefReplyAdapter adapter = new BriefReplyAdapter(getActivity(), position, replies);
         recyclerView.setAdapter(adapter);
 
         return root;

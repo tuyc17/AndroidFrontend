@@ -113,7 +113,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void initCommends() {
         String content = "飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞";
         for (int i=0; i<10; i++) {
-            Commend commend = new Commend(R.drawable.ic_launcher_background, "用户名称", "6-18", content);
+            Commend commend = new Commend(R.drawable.avatar2, "用户名称", "6-18", content);
             commends.add(commend);
         }
     }
