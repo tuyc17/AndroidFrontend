@@ -31,7 +31,9 @@ public class SettingActivity extends AppCompatActivity {
         btn_headicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingActivity.this, "（接下来可能的工作）从下列图片中选择一个喜欢的作为头像", Toast.LENGTH_SHORT).show();
+                Intent it = new Intent(SettingActivity.this, ChangeAvatarActivity.class);
+                startActivity(it);
+                //Toast.makeText(SettingActivity.this, "（接下来可能的工作）从下列图片中选择一个喜欢的作为头像", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -9,14 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.ChangeAvatarActivity"></activity>
+        <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.CommunicateActivity" />
         <activity android:name=".activity.ReplyDetailActivity" />
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.ChangePasswordActivity" />
         <activity android:name=".activity.ChangeNicknameActivity" />
         <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".activity.VerifyActivity" />
-<!--        <activity android:name=".activity.ProfileActivity" />-->
+        <activity android:name=".activity.VerifyActivity" /> <!-- <activity android:name=".activity.ProfileActivity" /> -->
         <activity android:name=".activity.DetailsActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>

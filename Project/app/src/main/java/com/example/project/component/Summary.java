@@ -7,8 +7,7 @@ public class Summary {
     public String title;
     public String content;
 
-    public Summary(int imageId, String username, String date, String title, String content)
-    {
+    public Summary(int imageId, String username, String date, String title, String content) {
         this.imageId = imageId;
         this.username= username;
         this.date = date;

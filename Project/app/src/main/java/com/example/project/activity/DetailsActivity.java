@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -25,7 +26,7 @@ public class DetailsActivity extends AppCompatActivity {
     private List<Commend> commends = new ArrayList<>();
 
     private ImageView img;
-    private VideoView video;
+    private SurfaceView video;
 
     private boolean isUp = false;
     private boolean isCollect = false;
@@ -45,6 +46,9 @@ public class DetailsActivity extends AppCompatActivity {
         video = findViewById(R.id.video);
         img.setVisibility(View.INVISIBLE);
         video.setVisibility(View.INVISIBLE);
+
+
+
 
         initCommends();
 

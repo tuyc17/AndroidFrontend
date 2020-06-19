@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
         CardView settings = root.findViewById(R.id.settings);
 
         ImageView avatar = root.findViewById(R.id.avatar);
-        avatar.setImageResource(R.drawable.ic_launcher_background);
+        avatar.setImageResource(R.drawable.avatar6);
 
         card_follow.setOnClickListener(new View.OnClickListener() {
             @Override
