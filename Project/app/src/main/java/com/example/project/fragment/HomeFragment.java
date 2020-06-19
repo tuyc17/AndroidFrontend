@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.project.activity.FollowActivity;
+import com.example.project.activity.VerifyActivity;
+import com.example.project.activity.SettingActivity;
+
 import com.example.project.R;
 import com.example.project.viewmodel.HomeViewModel;
 
@@ -30,6 +33,11 @@ public class HomeFragment extends Fragment {
         CardView card_follow = root.findViewById(R.id.card_follow);
         CardView card_collect = root.findViewById(R.id.card_collect);
         CardView card_action = root.findViewById(R.id.card_action);
+
+        CardView recent = root.findViewById(R.id.recent);
+        CardView apply = root.findViewById(R.id.apply);
+        CardView settings = root.findViewById(R.id.settings);
+
         ImageView avatar = root.findViewById(R.id.avatar);
         avatar.setImageResource(R.drawable.ic_launcher_background);
 
@@ -37,6 +45,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), FollowActivity.class);
+                startActivity(it);
+            }
+        });
+
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(getActivity(), VerifyActivity.class);
+                startActivity(it);
+            }
+        });
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(getActivity(), SettingActivity.class);
                 startActivity(it);
             }
         });
