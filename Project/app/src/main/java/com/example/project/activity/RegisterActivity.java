@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else {
                     // 将id,username,password 存入mPreferences
-                    mPreferences = getSharedPreferences("mataData", MODE_PRIVATE);
+                    mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
                     SharedPreferences.Editor saveEditor = mPreferences.edit();
                     saveEditor.putString("studentId", strId);
                     saveEditor.putString("username", strUsername);

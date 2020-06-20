@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         Button login = findViewById(R.id.login);
 
         //////////////////////
-        SharedPreferences mPreferences = getSharedPreferences("mataData", MODE_PRIVATE);
+        SharedPreferences mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
         String pUsername = mPreferences.getString("username", "defValue");
         if(!pUsername.equals("defValue")) {
             Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
