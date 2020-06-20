@@ -9,6 +9,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.project.R;
+import com.example.project.web.HttpReq;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,9 +47,27 @@ public class LoginActivity extends AppCompatActivity {
                 //连接后端检查用户名和密码是否匹配
                 //检查是否存在该用户
 
-                Intent it = new Intent();
-                it.setClass(LoginActivity.this, MainPageActivity.class);
-                startActivity(it);
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", "2017013582");
+                params.put("password", "123456");
+
+                Callback call = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        System.out.println("yes");
+                    }
+                };
+                HttpReq.sendOkHttpPostRequest("/login", call, params);
+                //Post();
+
+//                Intent it = new Intent();
+//                it.setClass(LoginActivity.this, MainPageActivity.class);
+//                startActivity(it);
 
 //                if(true)
 //                {

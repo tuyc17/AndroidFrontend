@@ -12,6 +12,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.project.activity.ActionActivity;
+import com.example.project.activity.CollectActivity;
 import com.example.project.activity.FollowActivity;
 import com.example.project.activity.VerifyActivity;
 import com.example.project.activity.SettingActivity;
@@ -45,6 +47,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), FollowActivity.class);
+                startActivity(it);
+            }
+        });
+
+        card_collect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(getActivity(), CollectActivity.class);
+                startActivity(it);
+            }
+        });
+
+        card_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(getActivity(), ActionActivity.class);
                 startActivity(it);
             }
         });
