@@ -3,6 +3,7 @@ package com.example.project.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,9 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText id;
     private EditText password1;
     private EditText password2;
+
+    private SharedPreferences mPreferences;
+    // private String sharedPrefFile = "com.example.project.activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,15 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "两次输入的密码不一致！", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    // 将id,username,password 存入mPreferences
+                    mPreferences = getSharedPreferences("mataData", MODE_PRIVATE);
+                    SharedPreferences.Editor saveEditor = mPreferences.edit();
+                    saveEditor.putString("studentId", strId);
+                    saveEditor.putString("username", strUsername);
+                    saveEditor.putString("password", strPassword1);
+                    saveEditor.apply();
+
+
                     HashMap<String, String> params = new HashMap<>();
                     params.put("studentId", strId);
                     params.put("username", strUsername);
