@@ -80,14 +80,10 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             e.printStackTrace();
                         }
-
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
                                 Intent it = new Intent(RegisterActivity.this, MainPageActivity.class);
-                                it.putExtra("studentId", strId);
-                                it.putExtra("username", strUsername);
-                                it.putExtra("password", strPassword1);
                                 startActivity(it);
                             }
                             else {
@@ -102,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
                     };
 
                     HttpReq.sendOkHttpPostRequest("/user/logon", call, params);
+
                 }
             }
         });
