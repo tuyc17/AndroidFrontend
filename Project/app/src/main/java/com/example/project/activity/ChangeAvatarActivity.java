@@ -3,6 +3,7 @@ package com.example.project.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.MenuItem;
@@ -11,8 +12,19 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.project.R;
+import com.example.project.web.HttpReq;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class ChangeAvatarActivity extends AppCompatActivity {
+    private SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +44,15 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         ImageView avatar5 = findViewById(R.id.avatar5);
         ImageView avatar6 = findViewById(R.id.avatar6);
 
+        mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
+        final SharedPreferences.Editor saveEditor = mPreferences.edit();
+
         avatar1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveEditor.putInt("avatar", R.drawable.avatar1);
+                saveEditor.apply();
+                upload();
                 finish();
             }
         });
@@ -42,6 +60,9 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         avatar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveEditor.putInt("avatar", R.drawable.avatar2);
+                saveEditor.apply();
+                upload();
                 finish();
             }
         });
@@ -49,6 +70,9 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         avatar3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveEditor.putInt("avatar", R.drawable.avatar3);
+                saveEditor.apply();
+                upload();
                 finish();
             }
         });
@@ -56,6 +80,9 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         avatar4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveEditor.putInt("avatar", R.drawable.avatar4);
+                saveEditor.apply();
+                upload();
                 finish();
             }
         });
@@ -63,6 +90,9 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         avatar5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveEditor.putInt("avatar", R.drawable.avatar5);
+                saveEditor.apply();
+                upload();
                 finish();
             }
         });
@@ -70,6 +100,9 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         avatar6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveEditor.putInt("avatar", R.drawable.avatar6);
+                saveEditor.apply();
+                upload();
                 finish();
             }
         });
@@ -82,4 +115,29 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void upload() {
+        HashMap<String, String> p = new HashMap<>();
+        int i = mPreferences.getInt("avatar", R.drawable.avatar1);
+        p.put("avatar", String.valueOf(i));
+        Callback call = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    System.out.println("yes");
+                }
+                else {
+                    System.out.println(response.code());
+                }
+            }
+        };
+        HttpReq.sendOkHttpPostRequest("/user/avatar", call, p);
+    }
+
+
 }

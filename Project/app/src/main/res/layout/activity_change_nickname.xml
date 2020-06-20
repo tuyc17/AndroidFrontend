@@ -29,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="请输入新的昵称" />
+            android:hint="请输入新的用户名"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/ensure_nickname"

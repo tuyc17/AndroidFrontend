@@ -3,6 +3,7 @@ package com.example.project.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +24,14 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class ChangeNicknameActivity extends AppCompatActivity {
+    private SharedPreferences mPreferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_nickname);
+
+        mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -56,6 +60,10 @@ public class ChangeNicknameActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if(response.isSuccessful()) {
+
+                            final SharedPreferences.Editor saveEditor = mPreferences.edit();
+                            saveEditor.putString("username", strNewNickname);
+                            saveEditor.apply();
                             // 正常返回
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -66,6 +74,7 @@ public class ChangeNicknameActivity extends AppCompatActivity {
                         }
                         else {
                             // 错误返回
+                            System.out.println(response.code());
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

@@ -47,9 +47,6 @@ public class DetailsActivity extends AppCompatActivity {
         img.setVisibility(View.INVISIBLE);
         video.setVisibility(View.INVISIBLE);
 
-
-
-
         initCommends();
 
         //todo

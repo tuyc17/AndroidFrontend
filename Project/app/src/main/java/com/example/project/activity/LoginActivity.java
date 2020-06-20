@@ -42,10 +42,37 @@ public class LoginActivity extends AppCompatActivity {
 
         //////////////////////
         SharedPreferences mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
-        String pUsername = mPreferences.getString("username", "defValue");
+        String pUsername = mPreferences.getString("studentId", "defValue");
+        String pPassword = mPreferences.getString("password", "defValue");
         if(!pUsername.equals("defValue")) {
-            Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
-            startActivity(it);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("username", pUsername);
+            params.put("password", pPassword);
+
+            Callback call = new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if(response.isSuccessful()) {
+                        Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
+                        startActivity(it);
+                    }
+                    else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, "用户名或密码错误，登录失败！", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            };
+
+            HttpReq.sendOkHttpPostRequest("/login", call, params);
         }
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -71,11 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if(response.isSuccessful()) {
                             Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
-                            it.putExtra("username", strUsername);
-                            it.putExtra("password", strPassword);
                             startActivity(it);
-                            // TODO:保存用户信息下一次打开app直接跳转到首页
-
                         }
                         else {
                             runOnUiThread(new Runnable() {

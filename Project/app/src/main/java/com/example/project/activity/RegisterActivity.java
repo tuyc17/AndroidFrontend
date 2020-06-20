@@ -20,10 +20,11 @@ import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Response;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
+
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText username;
@@ -67,8 +68,8 @@ public class RegisterActivity extends AppCompatActivity {
                     saveEditor.putString("studentId", strId);
                     saveEditor.putString("username", strUsername);
                     saveEditor.putString("password", strPassword1);
+                    saveEditor.putInt("avatar", R.drawable.avatar1);
                     saveEditor.apply();
-
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put("studentId", strId);
@@ -83,8 +84,35 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
-                                Intent it = new Intent(RegisterActivity.this, MainPageActivity.class);
-                                startActivity(it);
+
+                                HashMap<String, String> p = new HashMap<>();
+                                p.put("username", strId);
+                                p.put("password", strPassword1);
+
+                                Callback c = new Callback() {
+                                    @Override
+                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                                    }
+
+                                    @Override
+                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                        if(response.isSuccessful()) {
+                                            Intent it = new Intent(RegisterActivity.this, MainPageActivity.class);
+                                            startActivity(it);
+                                        }
+                                        else {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(RegisterActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    }
+                                };
+
+                                HttpReq.sendOkHttpPostRequest("/login", c, p);
                             }
                             else {
                                 runOnUiThread(new Runnable() {
@@ -98,7 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
                     };
 
                     HttpReq.sendOkHttpPostRequest("/user/logon", call, params);
-
                 }
             }
         });

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,11 +25,14 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class ChangePasswordActivity extends AppCompatActivity {
+    private SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+
+        mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -48,8 +52,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 final String strNewPassword = new_password.getText().toString();
 
                 // TODO: 判断old password是否正确
+                String old = mPreferences.getString("password", "");
+                if (!strOldPassword.equals(old)) {
+                    Toast.makeText(ChangePasswordActivity.this, "原密码密码不正确！", Toast.LENGTH_SHORT).show();
+                }
 
-                //
                 HashMap<String, String> params = new HashMap<>();
                 params.put("password", strNewPassword);
 
@@ -62,6 +69,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if(response.isSuccessful()) {
+
+                            SharedPreferences.Editor saveEditor = mPreferences.edit();
+                            saveEditor.putString("password", strNewPassword);
+                            saveEditor.apply();
                             // 正常返回
                             runOnUiThread(new Runnable() {
                                 @Override

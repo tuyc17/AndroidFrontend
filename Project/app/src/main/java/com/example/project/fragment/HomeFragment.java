@@ -1,11 +1,13 @@
 package com.example.project.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -20,8 +22,26 @@ import com.example.project.activity.SettingActivity;
 
 import com.example.project.R;
 import com.example.project.viewmodel.HomeViewModel;
+import com.example.project.web.HttpReq;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class HomeFragment extends Fragment {
+
+    private TextView username;
+    private TextView userTitle;
+    private ImageView avatar;
+
+    private SharedPreferences mPreferences;
 
     private HomeViewModel homeViewModel;
 
@@ -32,6 +52,12 @@ public class HomeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+        mPreferences = getActivity().getSharedPreferences("metadata", MODE_PRIVATE);
+
+        avatar = root.findViewById(R.id.avatar);
+        username = root.findViewById(R.id.username);
+        userTitle = root.findViewById(R.id.title);
+
         CardView card_follow = root.findViewById(R.id.card_follow);
         CardView card_collect = root.findViewById(R.id.card_collect);
         CardView card_action = root.findViewById(R.id.card_action);
@@ -39,9 +65,6 @@ public class HomeFragment extends Fragment {
         CardView recent = root.findViewById(R.id.recent);
         CardView apply = root.findViewById(R.id.apply);
         CardView settings = root.findViewById(R.id.settings);
-
-        ImageView avatar = root.findViewById(R.id.avatar);
-        avatar.setImageResource(R.drawable.avatar6);
 
         card_follow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +114,44 @@ public class HomeFragment extends Fragment {
 //                textView.setText(s);
 //            }
 //        });
+
+        upload();
+
         return root;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mPreferences = getActivity().getSharedPreferences("metadata", MODE_PRIVATE);
+        int img = mPreferences.getInt("avatar", R.drawable.avatar1);
+        String name = mPreferences.getString("username", "新用户");
+        String user_title = mPreferences.getString("userTitle", "");
+
+        avatar.setImageResource(img);
+        username.setText(name);
+        userTitle.setText(user_title);
+    }
+
+    private void upload() {
+        HashMap<String, String> p = new HashMap<>();
+        int i = mPreferences.getInt("avatar", R.drawable.avatar1);
+        p.put("avatar", String.valueOf(i));
+        Callback call = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    System.out.println("yes");
+                }
+            }
+        };
+        HttpReq.sendOkHttpPostRequest("/user/avatar", call, p);
+    }
+
 }
