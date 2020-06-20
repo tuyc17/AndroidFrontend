@@ -61,8 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if(response.isSuccessful()) {
-                            System.out.println("登录成功！"+ response.message());
-                            // 正常返回
                             Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
                             it.putExtra("username", strUsername);
                             it.putExtra("password", strPassword);
@@ -71,9 +69,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                         else {
-                            System.out.println(response.message());
-                            // 错误返回
-                            // ui更新
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

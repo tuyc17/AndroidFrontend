@@ -1,5 +1,7 @@
 package com.example.project.web;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +19,26 @@ public class HttpReq {
 
     private static Request request;
 
+    private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+
+    // 请求的Cookie处理
+    private static CookieJar cookieJar= new CookieJar() {
+        @Override
+        public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
+            cookieStore.put(httpUrl.host(), list);
+        }
+
+        @NotNull
+        @Override
+        public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
+            List<Cookie> cookies = cookieStore.get(httpUrl.host());
+            return cookies != null ? cookies : new ArrayList<Cookie>();
+        }
+    };
+
     public static void sendOkHttpGetRequest(String url, okhttp3.Callback callback)
     {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
 
         request = new Request.Builder().url(server_url + url).build();
 
@@ -28,7 +47,7 @@ public class HttpReq {
 
     public static void sendOkHttpPostRequest(String url, okhttp3.Callback callback, HashMap<String,String> params)
     {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         FormBody.Builder builder = new FormBody.Builder();
         for(String key:params.keySet())
         {

@@ -30,7 +30,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
-        Toolbar toolbar = findViewById(R.id.toolbar5);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加默认的返回图标
@@ -62,7 +62,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if(response.isSuccessful()) {
-                            System.out.println(response.code());
                             // 正常返回
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -72,9 +71,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             });
                         }
                         else {
-                            System.out.println(response.code());
                             // 错误返回
-                            // ui更新
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -85,9 +82,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     }
                 };
                 HttpReq.sendOkHttpPostRequest("/user/password", call, params);
-
-                ///////////////////
-                // Toast.makeText(ChangePasswordActivity.this, "您输入的新密码是："+ new_password.getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }
