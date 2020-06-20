@@ -125,13 +125,30 @@ public class HomeFragment extends Fragment {
         super.onStart();
 
         mPreferences = getActivity().getSharedPreferences("metadata", MODE_PRIVATE);
+        SharedPreferences.Editor saveEditor = mPreferences.edit();
         int img = mPreferences.getInt("avatar", R.drawable.avatar1);
         String name = mPreferences.getString("username", "新用户");
-        String user_title = mPreferences.getString("userTitle", "");
+        String user_title = mPreferences.getString("userTitle", "尚未进行院系认证");
 
         avatar.setImageResource(img);
         username.setText(name);
         userTitle.setText(user_title);
+
+        Intent it = getActivity().getIntent();
+        String intent_name = it.getStringExtra("nickname");
+        String intent_title = it.getStringExtra("userTitle");
+        if(intent_name != null) {
+            username.setText(intent_name);
+            // 保存至sharedPref
+            saveEditor.putString("nickName", intent_name);
+            saveEditor.apply();
+        }
+        if(intent_title != null) {
+            userTitle.setText(intent_title);
+            // 保存至sharedPref
+            saveEditor.putString("userTitle", intent_title);
+            saveEditor.apply();
+        }
     }
 
     private void upload() {

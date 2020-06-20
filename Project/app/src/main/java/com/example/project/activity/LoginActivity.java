@@ -97,6 +97,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if(response.isSuccessful()) {
+                            // TODO: 发post请求，通过strId获取userNickName用户昵称，写入sharedPreference
+                            ////////////////////////////////
                             Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
                             startActivity(it);
                         }

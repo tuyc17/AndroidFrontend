@@ -99,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                         if(response.isSuccessful()) {
                                             Intent it = new Intent(RegisterActivity.this, MainPageActivity.class);
+                                            it.putExtra("nickname", strUsername);
                                             startActivity(it);
                                         }
                                         else {
