@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.project.R;
 import com.example.project.web.HttpReq;
@@ -41,43 +42,49 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strUsername = username.getText().toString();
-                String strPassword = password.getText().toString();
+                final String strUsername = username.getText().toString();
+                final String strPassword = password.getText().toString();
 
                 //连接后端检查用户名和密码是否匹配
                 //检查是否存在该用户
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put("username", "2017013582");
-                params.put("password", "123456");
+                params.put("username", strUsername);
+                params.put("password", strPassword);
 
                 Callback call = new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                        e.printStackTrace();
                     }
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        System.out.println("yes");
+                        if(response.isSuccessful()) {
+                            System.out.println("登录成功！"+ response.message());
+                            // 正常返回
+                            Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
+                            it.putExtra("username", strUsername);
+                            it.putExtra("password", strPassword);
+                            startActivity(it);
+                            // TODO:保存用户信息下一次打开app直接跳转到首页
+
+                        }
+                        else {
+                            System.out.println(response.message());
+                            // 错误返回
+                            // ui更新
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, "用户名或密码错误，登录失败！", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
                 };
+
                 HttpReq.sendOkHttpPostRequest("/login", call, params);
-                //Post();
-
-//                Intent it = new Intent();
-//                it.setClass(LoginActivity.this, MainPageActivity.class);
-//                startActivity(it);
-
-//                if(true)
-//                {
-//                    Toast.makeText(MainActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
-//                }
-//                else
-//                {
-//                    //跳转到首页
-//                    //保存用户信息下一次打开app直接跳转到首页
-//                }
             }
         });
 

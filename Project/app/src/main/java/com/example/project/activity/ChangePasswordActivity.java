@@ -12,6 +12,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project.R;
+import com.example.project.web.HttpReq;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -30,10 +40,54 @@ public class ChangePasswordActivity extends AppCompatActivity {
         final EditText new_password = findViewById(R.id.new_password);
 
         Button ensure_password = findViewById(R.id.ensure_password);
+
         ensure_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ChangePasswordActivity.this, "您输入的新密码是："+ new_password.getText(), Toast.LENGTH_SHORT).show();
+                final String strOldPassword = old_password.getText().toString();
+                final String strNewPassword = new_password.getText().toString();
+
+                // TODO: 判断old password是否正确
+
+                //
+                HashMap<String, String> params = new HashMap<>();
+                params.put("password", strNewPassword);
+
+                Callback call = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if(response.isSuccessful()) {
+                            System.out.println(response.code());
+                            // 正常返回
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ChangePasswordActivity.this, "密码修改成功！", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        else {
+                            System.out.println(response.code());
+                            // 错误返回
+                            // ui更新
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ChangePasswordActivity.this, "密码修改失败！", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                };
+                HttpReq.sendOkHttpPostRequest("/user/password", call, params);
+
+                ///////////////////
+                // Toast.makeText(ChangePasswordActivity.this, "您输入的新密码是："+ new_password.getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }
