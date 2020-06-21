@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ActionActivity">
+    tools:context=".activity.RecentActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,4 +29,5 @@
             android:layout_height="match_parent"
             android:background="@color/lightGrey" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

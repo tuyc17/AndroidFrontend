@@ -16,7 +16,7 @@ import com.example.project.fragment.firstpage.RecommendFragment;
 public class FirstpagePagerAdapter extends FragmentStatePagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.first_page_tab_text_1, R.string.first_page_tab_text_2, R.string.first_page_tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{R.string.first_page_tab_text_3};
     private final FirstpageFragment mContext;
 
     public FirstpagePagerAdapter(FirstpageFragment context, FragmentManager fm) {
@@ -27,18 +27,19 @@ public class FirstpagePagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if(position == 0)
-        {
-            return FollowFragment.newInstance(position);
-        }
-        else if(position == 1)
-        {
-            return RecommendFragment.newInstance(position);
-        }
-        else
-        {
-            return HotFragment.newInstance(position);
-        }
+//        if(position == 0)
+//        {
+//            return FollowFragment.newInstance(position);
+//        }
+//        else if(position == 1)
+//        {
+//            return RecommendFragment.newInstance(position);
+//        }
+//        else
+//        {
+//            return HotFragment.newInstance(position);
+//        }
+        return HotFragment.newInstance(position);
     }
 
     @Override
@@ -48,6 +49,6 @@ public class FirstpagePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 1;
     }
 }

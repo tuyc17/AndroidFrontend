@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.project.activity.ActionActivity;
 import com.example.project.activity.CollectActivity;
 import com.example.project.activity.FollowActivity;
+import com.example.project.activity.RecentActivity;
 import com.example.project.activity.VerifyActivity;
 import com.example.project.activity.SettingActivity;
 
@@ -25,6 +26,8 @@ import com.example.project.viewmodel.HomeViewModel;
 import com.example.project.web.HttpReq;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,6 +43,10 @@ public class HomeFragment extends Fragment {
     private TextView username;
     private TextView userTitle;
     private ImageView avatar;
+
+    private TextView followText;
+    private TextView collectText;
+    private TextView actionText;
 
     private SharedPreferences mPreferences;
 
@@ -58,6 +65,10 @@ public class HomeFragment extends Fragment {
         username = root.findViewById(R.id.username);
         userTitle = root.findViewById(R.id.title);
 
+        followText = root.findViewById(R.id.num_follow);
+        collectText = root.findViewById(R.id.num_collect);
+        actionText = root.findViewById(R.id.num_action);
+
         CardView card_follow = root.findViewById(R.id.card_follow);
         CardView card_collect = root.findViewById(R.id.card_collect);
         CardView card_action = root.findViewById(R.id.card_action);
@@ -65,6 +76,13 @@ public class HomeFragment extends Fragment {
         CardView recent = root.findViewById(R.id.recent);
         CardView apply = root.findViewById(R.id.apply);
         CardView settings = root.findViewById(R.id.settings);
+
+        ImageView img_recent = root.findViewById(R.id.img_recent);
+        ImageView img_setting = root.findViewById(R.id.img_setting);
+        img_recent.setImageResource(R.drawable.ic_history);
+        img_setting.setImageResource(R.drawable.ic_setting);
+
+        apply.setVisibility(View.GONE);
 
         card_follow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +104,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(getActivity(), ActionActivity.class);
+                startActivity(it);
+            }
+        });
+
+        recent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(getActivity(), RecentActivity.class);
                 startActivity(it);
             }
         });
@@ -134,21 +160,9 @@ public class HomeFragment extends Fragment {
         username.setText(name);
         userTitle.setText(user_title);
 
-//        Intent it = getActivity().getIntent();
-//        String intent_name = it.getStringExtra("nickname");
-//        String intent_title = it.getStringExtra("userTitle");
-//        if(intent_name != null) {
-//            username.setText(intent_name);
-//            // 保存至sharedPref
-//            saveEditor.putString("nickName", intent_name);
-//            saveEditor.apply();
-//        }
-//        if(intent_title != null) {
-//            userTitle.setText(intent_title);
-//            // 保存至sharedPref
-//            saveEditor.putString("userTitle", intent_title);
-//            saveEditor.apply();
-//        }
+        setFollow();
+        setCollect();
+        setAction();
     }
 
     private void upload() {
@@ -171,4 +185,87 @@ public class HomeFragment extends Fragment {
         HttpReq.sendOkHttpPostRequest("/user/avatar", call, p);
     }
 
+    private void setFollow() {
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        final int num = jsonObject.getInt("count");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                followText.setText(String.valueOf(num));
+                            }
+                        });
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        HttpReq.sendOkHttpGetRequest("/friend/followingcount", callback);
+    }
+
+    private void setCollect() {
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        final int num = jsonObject.getInt("count");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                collectText.setText(String.valueOf(num));
+                            }
+                        });
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        HttpReq.sendOkHttpGetRequest("/article/favoritecount", callback);
+    }
+
+    private void setAction() {
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        final int num = jsonObject.getInt("count");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                actionText.setText(String.valueOf(num));
+                            }
+                        });
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        HttpReq.sendOkHttpGetRequest("/article/articlecount", callback);
+    }
 }

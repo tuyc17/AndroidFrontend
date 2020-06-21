@@ -45,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="bottom|left"
+                    android:letterSpacing="0.05"
                     android:text="TextView"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -208,10 +209,13 @@
 
                         <ImageView
                             android:id="@+id/img_recent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@android:drawable/btn_star" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@android:drawable/btn_star"
+                            tools:srcCompat="@drawable/ic_history" />
 
                         <Space
                             android:layout_width="wrap_content"
@@ -286,10 +290,13 @@
 
                         <ImageView
                             android:id="@+id/img_setting"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@android:drawable/btn_star" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@android:drawable/btn_star"
+                            tools:srcCompat="@drawable/ic_setting" />
 
                         <Space
                             android:layout_width="wrap_content"

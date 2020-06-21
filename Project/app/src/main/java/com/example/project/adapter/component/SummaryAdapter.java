@@ -60,6 +60,8 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
         holder.title.setText(summary.title);
         holder.content.setText(summary.content);
 
+        holder.content.setHeight(holder.content.getLineHeight() * 2);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

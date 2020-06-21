@@ -58,7 +58,7 @@ public class PublishFragment extends Fragment {
         content = root.findViewById(R.id.content);
         spinner = root.findViewById(R.id.theme);
 
-        String[] data = {"软件学院", "计算机系", "交叉信息学院", "自动化系", "经管学院", "考古专业", "其它专业"};
+        String[] data = {"building", "computer", "chemistry", "physics", "music"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, data);
         spinner.setAdapter(adapter);
 

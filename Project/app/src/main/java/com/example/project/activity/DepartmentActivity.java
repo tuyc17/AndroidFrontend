@@ -10,8 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.project.R;
-import com.example.project.adapter.component.ResultAdapter;
-import com.example.project.component.Result;
+import com.example.project.adapter.component.SummaryAdapter;
 import com.example.project.component.Summary;
 import com.example.project.web.HttpReq;
 
@@ -22,28 +21,29 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import kotlin.collections.IntIterator;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class SearchActivity extends AppCompatActivity {
-    private List<Result> results = new ArrayList<>();
-    private ResultAdapter adapter;
-    private String query;
+public class DepartmentActivity extends AppCompatActivity {
+    private String department;
+
+    private List<Summary> summaryList = new ArrayList<>();
+    private SummaryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_department);
 
         Intent it = getIntent();
-        query = it.getStringExtra("query");
+        department = it.getStringExtra("theme");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle(department);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -51,12 +51,11 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ResultAdapter(this, results);
+        adapter = new SummaryAdapter(this, summaryList);
         recyclerView.setAdapter(adapter);
 
-        initResult();
+        initSummary();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,29 +65,7 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initResult() {
-        initUser();
-        initSum();
-    }
-
-    private void initUser() {
-        List<Result> users = new ArrayList<>();
-        Callback callback = new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-            }
-        };
-        //HttpReq.sendOkHttpGetRequest();
-
-    }
-
-    private void initSum() {
+    private void initSummary() {
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -98,17 +75,18 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.isSuccessful()) {
+                    String data = response.body().string();
                     try {
-                        JSONObject jsonData = new JSONObject(response.body().string());
-                        final JSONArray jsonArticles = new JSONArray(jsonData.get("articles").toString());
-                        for (int i=0; i<jsonArticles.length(); i++) {
-                            JSONObject article = jsonArticles.getJSONObject(i);
+                        JSONObject body = new JSONObject(data);
+                        final JSONArray json = new JSONArray(body.get("articles").toString());
+                        for (int i=0; i< json.length(); i++) {
+                            JSONObject jsonObject = json.getJSONObject(i);
 
-                            final int id = article.getInt("id");
-                            final String title = article.getString("articlename");
-                            final String content = article.getString("content");
-                            final String publishtime = article.getString("publishtime").split("T")[0];
-                            final int authorid = article.getInt("authorid");
+                            final int id = jsonObject.getInt("id");
+                            final String title = jsonObject.getString("articlename");
+                            final String content = jsonObject.getString("content");
+                            final String publishtime = jsonObject.getString("publishtime").split("T")[0];
+                            final int authorid = jsonObject.getInt("authorid");
 
                             Callback c = new Callback() {
                                 @Override
@@ -126,11 +104,10 @@ public class SearchActivity extends AppCompatActivity {
 
                                             int avatar = j.getInt("avatar");
                                             String nickname = j.getString("nickname");
+                                            Summary summary = new Summary(avatar, nickname, publishtime, title, content, id, authorid);
+                                            summaryList.add(summary);
 
-                                            Result result = new Result(avatar, nickname, publishtime, title, content, id, authorid);
-                                            results.add(result);
-
-                                            if(results.size() == jsonArticles.length()) {
+                                            if(summaryList.size() == json.length()) {
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -145,22 +122,21 @@ public class SearchActivity extends AppCompatActivity {
                                     else {
                                         System.out.println(response.code());
                                     }
+
                                 }
                             };
                             HttpReq.sendOkHttpGetRequest("/user/info?id=" + authorid, c);
                         }
-                    } catch (JSONException e) {
+                    }catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 else {
-                    System.out.println("失败");
                     System.out.println(response.code());
                 }
             }
         };
 
-        HttpReq.sendOkHttpGetRequest("/article/search?target="+query, callback);
+        HttpReq.sendOkHttpGetRequest("/article/theme?theme="+department, callback);
     }
-
 }

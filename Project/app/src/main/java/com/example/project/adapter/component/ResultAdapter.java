@@ -53,7 +53,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Result result = results.get(position);
+        final Result result = results.get(position);
         holder.avatar.setImageResource(result.imageId);
         holder.username.setText(result.username);
         holder.date.setText(result.date);
@@ -89,6 +89,13 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
                 public void onClick(View v) {
                     //跳转到消息详情页
                     Intent it = new Intent(context, DetailsActivity.class);
+                    it.putExtra("avatar", result.imageId);
+                    it.putExtra("username", result.username);
+                    it.putExtra("date", result.date);
+                    it.putExtra("title", result.title);
+                    it.putExtra("content", result.content);
+                    it.putExtra("id", result.id);
+                    it.putExtra("authorId", result.authorId);
                     context.startActivity(it);
                 }
             });

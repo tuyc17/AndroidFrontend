@@ -54,6 +54,8 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView content;
     private RecyclerView recyclerView;
     private EditText input;
+    private RadioButton upbtn;
+    private RadioButton collectbtn;
 
     private boolean isUp = false;
     private boolean isCollect = false;
@@ -97,6 +99,9 @@ public class DetailsActivity extends AppCompatActivity {
         img.setVisibility(View.GONE);
         video.setVisibility(View.GONE);
 
+        initImg();
+        initVideo();
+
         //todo
         //实现recycler的吸顶效果
         recyclerView = findViewById(R.id.recycler);
@@ -107,15 +112,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         initCommends();
 
-        final RadioButton upbtn = findViewById(R.id.upBtn);
-        final RadioButton collectbtn = findViewById(R.id.collectBtn);
+        upbtn = findViewById(R.id.upBtn);
+        collectbtn = findViewById(R.id.collectBtn);
 
-        //Todo
-        //需要访问用户的收藏栏和点赞栏查找该文章是否被点赞和收藏过
-
-
-        upbtn.setChecked(isUp);
-        collectbtn.setChecked(isCollect);
+        initBtn();
 
         upbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,9 +133,9 @@ public class DetailsActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
-                                if(response.code() == 200) {
-
-                                }
+//                                if(response.code() == 200) {
+//
+//                                }
                             }
                             else {
                                 System.out.println(response.code());
@@ -161,9 +161,9 @@ public class DetailsActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
-                                if(response.code() == 201) {
-                                    System.out.println("no");
-                                }
+//                                if(response.code() == 201) {
+//                                    System.out.println("no");
+//                                }
                             }
                             else {
                                 System.out.println(response.code());
@@ -195,9 +195,9 @@ public class DetailsActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
-                                if(response.code() == 200) {
-                                    System.out.println("yes");
-                                }
+//                                if(response.code() == 200) {
+//                                    System.out.println("yes");
+//                                }
                             }
                             else {
                                 System.out.println(response.code());
@@ -254,7 +254,6 @@ public class DetailsActivity extends AppCompatActivity {
         input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     final String strComment = input.getText().toString();
 
@@ -311,6 +310,13 @@ public class DetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void initImg() {
+
+    }
+
+    private void initVideo() {
+
+    }
 
     private void initCommends() {
         Callback callback = new Callback() {
@@ -384,7 +390,6 @@ public class DetailsActivity extends AppCompatActivity {
         };
         HttpReq.sendOkHttpGetRequest("/article/read?articleId=" + id,callback);
 
-
 //        String content = "飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞";
 //        for (int i=0; i<10; i++) {
 //            Commend commend = new Commend(R.drawable.avatar2, "用户名称", "6-18", content);
@@ -392,4 +397,83 @@ public class DetailsActivity extends AppCompatActivity {
 //        }
     }
 
+    private void initBtn() {
+        Callback callback1 = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = 0;
+                try {
+                    JSONObject data = new JSONObject(response.body().string());
+                    code = data.getInt("code");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(code == 200) {
+                    isUp = false;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            upbtn.setChecked(isUp);
+                        }
+                    });
+                }
+                else {
+                    isUp = true;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            upbtn.setChecked(isUp);
+                        }
+                    });
+                }
+            }
+        };
+        HttpReq.sendOkHttpGetRequest("/article/ispraised?articleId="+id, callback1);
+
+
+        Callback callback2 = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int code = 0;
+                try {
+                    JSONObject data = new JSONObject(response.body().string());
+                    code = data.getInt("code");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(code == 200) {
+                    isCollect = false;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            collectbtn.setChecked(isCollect);
+                        }
+                    });
+                }
+                else {
+                    isCollect = true;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            collectbtn.setChecked(isCollect);
+                        }
+                    });
+                }
+                //System.out.println(response.code());
+            }
+        };
+        HttpReq.sendOkHttpGetRequest("/article/isfavorited?articleId="+id, callback2);
+    }
 }

@@ -55,25 +55,15 @@ public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.Vi
         holder.avatar.setImageResource(reply.imageId);
         holder.username.setText(reply.username);
 
-        if(index == 0) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(context, ReplyDetailActivity.class);
-                    context.startActivity(it);
-                }
-            });
-        }
-        else {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(context, CommunicateActivity.class);
-                    it.putExtra("recevierId", reply.receiver_id);
-                    context.startActivity(it);
-                }
-            });
-        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(context, CommunicateActivity.class);
+                it.putExtra("recevierId", reply.receiver_id);
+                it.putExtra("username", reply.username);
+                context.startActivity(it);
+            }
+        });
     }
 
     @Override

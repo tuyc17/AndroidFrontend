@@ -13,13 +13,27 @@ import android.view.ViewGroup;
 import com.example.project.R;
 import com.example.project.component.Summary;
 import com.example.project.adapter.component.SummaryAdapter;
+import com.example.project.web.HttpReq;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class HotFragment extends Fragment {
 
     private List<Summary> summaryList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private SummaryAdapter adapter;
 
     public static HotFragment newInstance(int index){
         HotFragment fragment = new HotFragment();
@@ -29,30 +43,163 @@ public class HotFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initSummary();
 
         View root = inflater.inflate(R.layout.fragment_main_page_hot, container, false);
-        RecyclerView recyclerView = root.findViewById(R.id.recycler);
+
+        recyclerView = root.findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        SummaryAdapter adapter = new SummaryAdapter(getActivity(), summaryList);
+        adapter = new SummaryAdapter(getActivity(), summaryList);
         recyclerView.setAdapter(adapter);
+
+        initSummary();
 
         return root;
     }
 
     private void initSummary() {
-//        Summary summary1 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-//        summaryList.add(summary1);
-//        Summary summary2 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-//        summaryList.add(summary2);
-//        Summary summary3 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-//        summaryList.add(summary3);
-//        Summary summary4 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-//        summaryList.add(summary4);
-//        Summary summary5 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-//        summaryList.add(summary5);
-//        Summary summary6 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-//        summaryList.add(summary6);
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    try {
+                        JSONObject jsonData = new JSONObject(response.body().string());
+                        final JSONArray jsonArticles = new JSONArray(jsonData.get("articles").toString());
+                        for (int i=0; i<jsonArticles.length(); i++) {
+                            JSONObject article = jsonArticles.getJSONObject(i);
+
+                            final int id = article.getInt("id");
+                            final String title = article.getString("articlename");
+                            final String content = article.getString("content");
+                            final String publishtime = article.getString("publishtime").split("T")[0];
+                            final int authorid = article.getInt("authorid");
+
+                            Callback c = new Callback() {
+                                @Override
+                                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                                }
+
+                                @Override
+                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                    if(response.isSuccessful()) {
+                                        String userdata = response.body().string();
+                                        try {
+                                            JSONObject temp = new JSONObject(userdata);
+                                            JSONObject j = new JSONObject(temp.get("info").toString());
+
+                                            int avatar = j.getInt("avatar");
+                                            String nickname = j.getString("nickname");
+                                            Summary summary = new Summary(avatar, nickname, publishtime, title, content, id, authorid);
+                                            summaryList.add(summary);
+
+                                            if(summaryList.size() == jsonArticles.length()) {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        adapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                            }
+                                        }catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    else {
+                                        System.out.println(response.code());
+                                    }
+                                }
+                            };
+                            HttpReq.sendOkHttpGetRequest("/user/info?id=" + authorid, c);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        HttpReq.sendOkHttpGetRequest("/article/hot", callback);
+//        HashMap<String, String> p = new HashMap<>();
+//        p.put("theme", "软件学院");
+//
+//        Callback callback = new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                if(response.isSuccessful()) {
+//                    String data = response.body().string();
+//                    try {
+//                        JSONObject body = new JSONObject(data);
+//                        final JSONArray json = new JSONArray(body.get("articles").toString());
+//                        for (int i=0; i< json.length(); i++) {
+//                            JSONObject jsonObject = json.getJSONObject(i);
+//
+//                            final int id = jsonObject.getInt("id");
+//                            final String title = jsonObject.getString("articlename");
+//                            final String content = jsonObject.getString("content");
+//                            final String publishtime = jsonObject.getString("publishtime").split("T")[0];
+//                            final int authorid = jsonObject.getInt("authorid");
+//
+//                            Callback c = new Callback() {
+//                                @Override
+//                                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                                    if(response.isSuccessful()) {
+//                                        String userdata = response.body().string();
+//                                        try {
+//                                            JSONObject temp = new JSONObject(userdata);
+//                                            JSONObject j = new JSONObject(temp.get("info").toString());
+//
+//                                            int avatar = j.getInt("avatar");
+//                                            String nickname = j.getString("nickname");
+//                                            Summary summary = new Summary(avatar, nickname, publishtime, title, content, id, authorid);
+//                                            summaryList.add(summary);
+//
+//                                            if(summaryList.size() == json.length()) {
+//                                                getActivity().runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        adapter.notifyDataSetChanged();
+//                                                    }
+//                                                });
+//                                            }
+//                                        }catch (JSONException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//                                    else {
+//                                        System.out.println(response.code());
+//                                    }
+//
+//                                }
+//                            };
+//                            HttpReq.sendOkHttpGetRequest("/user/info?id=" + authorid, c);
+//                        }
+//                    }catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                else {
+//                    System.out.println(response.code());
+//                }
+//            }
+//        };
+//
+//        HttpReq.sendOkHttpGetRequest("/article/theme?theme=软件学院", callback);
     }
 }

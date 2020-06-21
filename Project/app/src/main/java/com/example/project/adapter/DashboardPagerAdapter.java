@@ -14,7 +14,7 @@ import com.example.project.fragment.dashboard.DepartmentFragment;
 public class DashboardPagerAdapter extends FragmentStatePagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.dash_tab_text_1, R.string.dash_tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.dash_tab_text_1};
     private final DashboardFragment mContext;
 
     public DashboardPagerAdapter(DashboardFragment context, FragmentManager fm) {
@@ -25,14 +25,15 @@ public class DashboardPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if(position == 0)
-        {
-            return DepartmentFragment.newInstance(position);
-        }
-        else
-        {
-            return ClassFragment.newInstance(position);
-        }
+//        if(position == 0)
+//        {
+//
+//        }
+//        else
+//        {
+//            return ClassFragment.newInstance(position);
+//        }
+        return DepartmentFragment.newInstance(position);
     }
 
     @Override
@@ -42,6 +43,6 @@ public class DashboardPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 }

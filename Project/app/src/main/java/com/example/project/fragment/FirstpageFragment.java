@@ -45,8 +45,8 @@ public class FirstpageFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                System.out.println(query);
                 Intent it = new Intent(getActivity(), SearchActivity.class);
+                it.putExtra("query", query);
                 startActivity(it);
                 return false;
             }

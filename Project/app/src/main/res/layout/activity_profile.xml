@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/updownline"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme" />
 
@@ -70,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginRight="10dp"
                 android:layout_weight="2"
                 android:text="关注" />
 
@@ -163,13 +164,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:background="#FFFFFF"
+            android:padding="10dp"
             android:text="TA的文章"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0" />
+            android:layout_weight="0"
+            android:background="@color/lightGrey" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

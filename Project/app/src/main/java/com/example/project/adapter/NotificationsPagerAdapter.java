@@ -14,7 +14,7 @@ import com.example.project.fragment.notifications.ReplyFragment;
 public class NotificationsPagerAdapter extends FragmentStatePagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.notifications_tab_text_1, R.string.notifications_tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.notifications_tab_text_2};
     private final NotificationsFragment mContext;
 
     public NotificationsPagerAdapter(NotificationsFragment context, FragmentManager fm) {
@@ -25,14 +25,15 @@ public class NotificationsPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if(position == 0)
-        {
-            return ReplyFragment.newInstance(position);
-        }
-        else
-        {
-            return CommunicateFragment.newInstance(position);
-        }
+//        if(position == 0)
+//        {
+//            return ReplyFragment.newInstance(position);
+//        }
+//        else
+//        {
+//
+//        }
+        return CommunicateFragment.newInstance(position);
     }
 
     @Override
@@ -42,6 +43,6 @@ public class NotificationsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 }

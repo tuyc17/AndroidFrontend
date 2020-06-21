@@ -2,6 +2,8 @@ package com.example.project.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,14 +15,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.project.R;
+import com.example.project.adapter.component.SummaryAdapter;
+import com.example.project.component.Summary;
 import com.example.project.web.HttpReq;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,8 +35,13 @@ import okhttp3.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private List<Summary> summaryList = new ArrayList<>();
+    private SummaryAdapter adapter;
+
     private boolean isFollow = false;
     private int authorId;
+    private int avatarId;
+    private String strUsername;
 
     private ImageView avatarView;
     private TextView usernameView;
@@ -52,6 +64,8 @@ public class ProfileActivity extends AppCompatActivity {
         num_praise = findViewById(R.id.num_praise);
         num_collect = findViewById(R.id.num_collect);
 
+        titleView.setText("");
+
         initUser();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -62,7 +76,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         btn = findViewById(R.id.btn_follow);
 
-        //Todo 自己的情况取消显示关注按钮显示
         initBtn();
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -82,8 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
-                                //System.out.println(response.code());
-                                System.out.println("关注关注");
+
                             }
                             else {
                                 //System.out.println(response.code());
@@ -110,8 +122,7 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
-                                //System.out.println(response.code());
-                                System.out.println("未关注关注");
+
                             }
                             else {
                                 //System.out.println(response.code());
@@ -129,7 +140,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Todo
         //该用户发表过的文章
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new SummaryAdapter(this, summaryList);
+        recyclerView.setAdapter(adapter);
 
+        initSum();
     }
 
     @Override
@@ -158,22 +175,31 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.isSuccessful()) {
-
-                    if(response.code() == 201) {
-                        isFollow = true;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btn.setText("已关注");
-                            }
-                        });
+                    int code = 0;
+                    try
+                    {
+                        JSONObject data = new JSONObject(response.body().string());
+                        code = data.getInt("code");
                     }
-                    else {
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(code == 200) {
                         isFollow = false;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 btn.setText("关注");
+                            }
+                        });
+                    }
+                    else {
+                        isFollow = true;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btn.setText("已关注");
                             }
                         });
                     }
@@ -207,6 +233,9 @@ public class ProfileActivity extends AppCompatActivity {
                         final int praiseCount = jsonInfo.getInt("praisecount");
                         final int favoriteCount = jsonInfo.getInt("favoritecount");
 
+                        avatarId = avatar;
+                        strUsername = nickname;
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -229,5 +258,47 @@ public class ProfileActivity extends AppCompatActivity {
         };
 
         HttpReq.sendOkHttpGetRequest("/user/info?id="+authorId, callback);
+    }
+
+    private void initSum() {
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonData = new JSONObject(response.body().string());
+                        JSONArray jsonArticle = new JSONArray(jsonData.get("articles").toString());
+                        for(int i=0; i<jsonArticle.length(); i++) {
+                            JSONObject article = jsonArticle.getJSONObject(i);
+                            String title = article.getString("articlename");
+                            String content = article.getString("content");
+                            String time = article.getString("publishtime").split("T")[0];
+                            int id = article.getInt("id");
+
+                            Summary summary = new Summary(avatarId, strUsername, time, title, content, id, authorId);
+                            summaryList.add(summary);
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
+        HttpReq.sendOkHttpGetRequest("/article/person?id="+authorId, callback);
+
     }
 }

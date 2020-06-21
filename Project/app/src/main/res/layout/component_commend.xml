@@ -52,8 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:text="内容简介"
         android:textSize="18sp" />
 
@@ -63,8 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:clickable="true"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="展开"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="16sp" />

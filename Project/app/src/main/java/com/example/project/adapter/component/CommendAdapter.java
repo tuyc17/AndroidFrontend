@@ -80,14 +80,14 @@ public class CommendAdapter extends RecyclerView.Adapter<CommendAdapter.ViewHold
             }
         });
 
-        holder.avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //跳转到用户详情页
-                Intent it = new Intent(context, ProfileActivity.class);
-                context.startActivity(it);
-            }
-        });
+//        holder.avatar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //跳转到用户详情页
+//                Intent it = new Intent(context, ProfileActivity.class);
+//                context.startActivity(it);
+//            }
+//        });
     }
 
     @Override

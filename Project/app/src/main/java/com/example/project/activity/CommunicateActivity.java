@@ -40,6 +40,7 @@ public class CommunicateActivity extends AppCompatActivity {
     private int receiverId;
     private MessageAdapter adapter;
     private EditText input;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +51,12 @@ public class CommunicateActivity extends AppCompatActivity {
         receiverId = it.getIntExtra("recevierId", -1);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle(it.getStringExtra("username"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
-        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new MessageAdapter(messages);
@@ -90,6 +91,7 @@ public class CommunicateActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         adapter.notifyDataSetChanged();
+                                        recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
                                     }
                                 });
                             }
@@ -125,7 +127,6 @@ public class CommunicateActivity extends AppCompatActivity {
     }
 
     private void initMessages() {
-        messages.clear();
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -140,8 +141,11 @@ public class CommunicateActivity extends AppCompatActivity {
                         JSONObject jsonData = new JSONObject(data);
                         JSONArray jsonMsg = new JSONArray(jsonData.get("chatlist").toString());
 
-                        System.out.println(jsonMsg);
+                        if(jsonMsg.length() == messages.size()) {
+                            return;
+                        }
 
+                        messages.clear();
                         for (int i=0; i<jsonMsg.length(); i++) {
                             JSONObject msg = jsonMsg.getJSONObject(i);
                             //int sender_id = msg.getInt("senderid");
@@ -158,16 +162,14 @@ public class CommunicateActivity extends AppCompatActivity {
                                 message = new Message(content, 0);
                             }
                             messages.add(message);
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-
                         }
-
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                                recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
+                            }
+                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

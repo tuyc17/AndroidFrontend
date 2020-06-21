@@ -4,8 +4,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="dash_tab_text_1">理科院系</string>
-    <string name="dash_tab_text_2">文科院系</string>
+    <string name="dash_tab_text_1">院系</string>
+    <string name="dash_tab_text_2">分类</string>
     <string name="first_page_tab_text_1">关注</string>
     <string name="first_page_tab_text_2">推荐</string>
     <string name="first_page_tab_text_3">热点</string>

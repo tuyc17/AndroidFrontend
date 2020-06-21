@@ -5,13 +5,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.project.R;
-import com.example.project.adapter.component.ResultAdapter;
-import com.example.project.component.Result;
+import com.example.project.adapter.component.SummaryAdapter;
 import com.example.project.component.Summary;
 import com.example.project.web.HttpReq;
 
@@ -24,23 +22,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import kotlin.collections.IntIterator;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class SearchActivity extends AppCompatActivity {
-    private List<Result> results = new ArrayList<>();
-    private ResultAdapter adapter;
-    private String query;
+public class RecentActivity extends AppCompatActivity {
+    private List<Summary> summaryList = new ArrayList<>();
+    private SummaryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-
-        Intent it = getIntent();
-        query = it.getStringExtra("query");
+        setContentView(R.layout.activity_recent);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -51,12 +44,11 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ResultAdapter(this, results);
+        adapter = new SummaryAdapter(this, summaryList);
         recyclerView.setAdapter(adapter);
 
-        initResult();
+        initRecent();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,29 +58,7 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initResult() {
-        initUser();
-        initSum();
-    }
-
-    private void initUser() {
-        List<Result> users = new ArrayList<>();
-        Callback callback = new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-            }
-        };
-        //HttpReq.sendOkHttpGetRequest();
-
-    }
-
-    private void initSum() {
+    private void initRecent() {
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -101,14 +71,17 @@ public class SearchActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonData = new JSONObject(response.body().string());
                         final JSONArray jsonArticles = new JSONArray(jsonData.get("articles").toString());
+
+                        System.out.println(jsonArticles);
+
                         for (int i=0; i<jsonArticles.length(); i++) {
                             JSONObject article = jsonArticles.getJSONObject(i);
 
                             final int id = article.getInt("id");
-                            final String title = article.getString("articlename");
+                            final String title = article.getString("articleName");
                             final String content = article.getString("content");
-                            final String publishtime = article.getString("publishtime").split("T")[0];
-                            final int authorid = article.getInt("authorid");
+                            final String publishtime = article.getString("publishTime").split("T")[0];
+                            final int authorid = article.getInt("authorId");
 
                             Callback c = new Callback() {
                                 @Override
@@ -126,11 +99,12 @@ public class SearchActivity extends AppCompatActivity {
 
                                             int avatar = j.getInt("avatar");
                                             String nickname = j.getString("nickname");
+                                            Summary summary = new Summary(avatar, nickname, publishtime, title, content, id, authorid);
+                                            summaryList.add(summary);
 
-                                            Result result = new Result(avatar, nickname, publishtime, title, content, id, authorid);
-                                            results.add(result);
+                                            System.out.println(summary);
 
-                                            if(results.size() == jsonArticles.length()) {
+                                            if(summaryList.size() == jsonArticles.length()) {
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -149,18 +123,14 @@ public class SearchActivity extends AppCompatActivity {
                             };
                             HttpReq.sendOkHttpGetRequest("/user/info?id=" + authorid, c);
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                else {
-                    System.out.println("失败");
-                    System.out.println(response.code());
-                }
             }
         };
 
-        HttpReq.sendOkHttpGetRequest("/article/search?target="+query, callback);
+        HttpReq.sendOkHttpGetRequest("/article/history", callback);
     }
-
 }
