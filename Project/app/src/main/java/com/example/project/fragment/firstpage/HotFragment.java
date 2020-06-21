@@ -42,17 +42,17 @@ public class HotFragment extends Fragment {
     }
 
     private void initSummary() {
-        Summary summary1 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-        summaryList.add(summary1);
-        Summary summary2 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-        summaryList.add(summary2);
-        Summary summary3 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-        summaryList.add(summary3);
-        Summary summary4 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-        summaryList.add(summary4);
-        Summary summary5 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-        summaryList.add(summary5);
-        Summary summary6 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
-        summaryList.add(summary6);
+//        Summary summary1 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
+//        summaryList.add(summary1);
+//        Summary summary2 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
+//        summaryList.add(summary2);
+//        Summary summary3 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
+//        summaryList.add(summary3);
+//        Summary summary4 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
+//        summaryList.add(summary4);
+//        Summary summary5 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
+//        summaryList.add(summary5);
+//        Summary summary6 = new Summary(R.drawable.ic_launcher_background, "用户姓名" , "6-18", "标题", "内容简介");
+//        summaryList.add(summary6);
     }
 }

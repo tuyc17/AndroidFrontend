@@ -41,39 +41,42 @@ public class LoginActivity extends AppCompatActivity {
         Button login = findViewById(R.id.login);
 
         //////////////////////
-        SharedPreferences mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
-        String pUsername = mPreferences.getString("studentId", "defValue");
-        String pPassword = mPreferences.getString("password", "defValue");
-        if(!pUsername.equals("defValue")) {
-            HashMap<String, String> params = new HashMap<>();
-            params.put("username", pUsername);
-            params.put("password", pPassword);
 
-            Callback call = new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if(response.isSuccessful()) {
-                        Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
-                        startActivity(it);
-                    }
-                    else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(LoginActivity.this, "用户名或密码错误，登录失败！", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
-            };
-
-            HttpReq.sendOkHttpPostRequest("/login", call, params);
-        }
+//        SharedPreferences mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
+//        String pUsername = mPreferences.getString("studentId", "defValue");
+//        String pPassword = mPreferences.getString("password", "defValue");
+//        if(!pUsername.equals("defValue")) {
+//            HashMap<String, String> params = new HashMap<>();
+//            params.put("username", pUsername);
+//            params.put("password", pPassword);
+//
+//            Callback call = new Callback() {
+//                @Override
+//                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                @Override
+//                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                    if(response.isSuccessful()) {
+//
+//                    }
+//                    else {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Toast.makeText(LoginActivity.this, "用户名或密码错误，登录失败！", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                    }
+//                }
+//            };
+//
+//            HttpReq.sendOkHttpPostRequest("/login", call, params);
+//
+//            Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
+//            startActivity(it);
+//        }
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,8 +100,12 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         if(response.isSuccessful()) {
-                            // TODO: 发post请求，通过strId获取userNickName用户昵称，写入sharedPreference
-                            ////////////////////////////////
+
+                            SharedPreferences mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
+                            SharedPreferences.Editor saveEditor = mPreferences.edit();
+                            saveEditor.putString("password", strPassword);
+                            saveEditor.apply();
+
                             Intent it = new Intent(LoginActivity.this, MainPageActivity.class);
                             startActivity(it);
                         }

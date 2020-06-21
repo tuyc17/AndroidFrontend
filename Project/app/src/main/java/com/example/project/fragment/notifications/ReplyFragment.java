@@ -47,10 +47,11 @@ public class ReplyFragment extends Fragment {
     }
 
     private void initReply() {
-        for (int i=0; i< 10; i++)
-        {
-            BriefReply reply1 = new BriefReply(R.drawable.ic_launcher_background, "用户昵称", "消息简介");
-            replies.add(reply1);
-        }
+
+//        for (int i=0; i< 10; i++)
+//        {
+//            BriefReply reply1 = new BriefReply(R.drawable.ic_launcher_background, "用户昵称", "消息简介");
+//            replies.add(reply1);
+//        }
     }
 }

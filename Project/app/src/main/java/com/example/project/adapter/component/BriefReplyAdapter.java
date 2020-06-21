@@ -54,7 +54,6 @@ public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.Vi
         BriefReply reply = replies.get(position);
         holder.avatar.setImageResource(reply.imageId);
         holder.username.setText(reply.username);
-        holder.content.setText(reply.content);
 
         if(index == 0) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

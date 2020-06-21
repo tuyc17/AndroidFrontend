@@ -3,12 +3,12 @@ package com.example.project.component;
 public class BriefReply {
     public int imageId;
     public String username;
-    public String content;
+    public int receiver_id;
 
-    public BriefReply(int imageId, String username, String content) {
+    public BriefReply(int imageId, String username, int receiver_id) {
         this.imageId = imageId;
         this.username = username;
-        this.content = content;
+        this.receiver_id = receiver_id;
     }
 
 }

@@ -53,7 +53,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Summary summary = Summaries.get(position);
+        final Summary summary = Summaries.get(position);
         holder.avatar.setImageResource(summary.imageId);
         holder.username.setText(summary.username);
         holder.date.setText(summary.date);
@@ -65,6 +65,13 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
             public void onClick(View v) {
                 //intent 需要携带extraData才知道去获取哪个消息的具体信息
                 Intent it = new Intent(context, DetailsActivity.class);
+                it.putExtra("avatar", summary.imageId);
+                it.putExtra("username", summary.username);
+                it.putExtra("date", summary.date);
+                it.putExtra("title", summary.title);
+                it.putExtra("content", summary.content);
+                it.putExtra("id", summary.id);
+                it.putExtra("authorId", summary.authorId);
                 context.startActivity(it);
             }
         });

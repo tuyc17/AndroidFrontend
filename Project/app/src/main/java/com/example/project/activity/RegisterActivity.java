@@ -32,9 +32,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password1;
     private EditText password2;
 
-    private SharedPreferences mPreferences;
-    // private String sharedPrefFile = "com.example.project.activity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else {
                     // 将id,username,password 存入mPreferences
-                    mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
-                    SharedPreferences.Editor saveEditor = mPreferences.edit();
-                    saveEditor.putString("studentId", strId);
-                    saveEditor.putString("username", strUsername);
-                    saveEditor.putString("password", strPassword1);
-                    saveEditor.putInt("avatar", R.drawable.avatar1);
-                    saveEditor.apply();
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put("studentId", strId);
@@ -84,6 +74,11 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             if(response.isSuccessful()) {
+
+                                SharedPreferences mPreferences = getSharedPreferences("metadata", MODE_PRIVATE);
+                                SharedPreferences.Editor saveEditor = mPreferences.edit();
+                                saveEditor.putString("password", strPassword1);
+                                saveEditor.apply();
 
                                 HashMap<String, String> p = new HashMap<>();
                                 p.put("username", strId);

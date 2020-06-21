@@ -47,9 +47,9 @@ public class ActionActivity extends AppCompatActivity {
     }
 
     private void initSummary() {
-        for (int i=0; i<5; i++) {
-            Summary summary = new Summary(R.drawable.avatar4, "用户名称", "6-20", "标题", "简介");
-            summaries.add(summary);
-        }
+//        for (int i=0; i<5; i++) {
+//            Summary summary = new Summary(R.drawable.avatar4, "用户名称", "6-20", "标题", "简介");
+//            summaries.add(summary);
+//        }
     }
 }

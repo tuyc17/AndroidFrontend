@@ -2,6 +2,7 @@ package com.example.project.fragment;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,16 +17,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.project.R;
 import com.example.project.viewmodel.PublishViewModel;
+import com.example.project.web.HttpReq;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class PublishFragment extends Fragment {
     private Bitmap img;
 
     private PublishViewModel mViewModel;
+    private EditText title;
+    private EditText content;
 
     public static PublishFragment newInstance() {
         return new PublishFragment();
@@ -37,6 +50,9 @@ public class PublishFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_publish, container, false);
         Button upload_btn = root.findViewById(R.id.upload_btn);
         Button publish_btn = root.findViewById(R.id.publish_btn);
+
+        title = root.findViewById(R.id.title);
+        content = root.findViewById(R.id.content);
 
         upload_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +67,37 @@ public class PublishFragment extends Fragment {
         publish_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String strTitle = title.getText().toString();
+                String strContent = content.getText().toString();
 
+                HashMap<String, String> p = new HashMap<>();
+                p.put("theme", "软件学院");
+                p.put("title", strTitle);
+                p.put("content", strContent);
+
+                Callback callback = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if(response.isSuccessful()) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "文章发表成功！", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        else {
+                            System.out.println(response.code());
+                        }
+                    }
+                };
+
+                HttpReq.sendOkHttpPostRequest("/article/article", callback, p);
             }
         });
 

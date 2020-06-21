@@ -48,7 +48,6 @@ public class ChangeNicknameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String strNewNickname = new_nickname.getText().toString();
 
-                ////////////////////////////////////////
                 HashMap<String, String> params = new HashMap<>();
                 params.put("username", strNewNickname);
 
@@ -78,16 +77,14 @@ public class ChangeNicknameActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(ChangeNicknameActivity.this, "用户昵称修改失败！", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(ChangeNicknameActivity.this, "用户昵称修改失败！", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
                     }
                 };
-                HttpReq.sendOkHttpPostRequest("/user/username", call, params);
+                HttpReq.sendOkHttpPostRequest("/user/name", call, params);
 
-                //////////////////////////////////
-                // Toast.makeText(ChangeNicknameActivity.this, "新昵称为："+ new_nickname.getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }
