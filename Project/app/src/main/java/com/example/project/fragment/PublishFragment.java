@@ -16,8 +16,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.project.R;
@@ -39,6 +41,7 @@ public class PublishFragment extends Fragment {
     private PublishViewModel mViewModel;
     private EditText title;
     private EditText content;
+    private Spinner spinner;
 
     public static PublishFragment newInstance() {
         return new PublishFragment();
@@ -53,6 +56,11 @@ public class PublishFragment extends Fragment {
 
         title = root.findViewById(R.id.title);
         content = root.findViewById(R.id.content);
+        spinner = root.findViewById(R.id.theme);
+
+        String[] data = {"软件学院", "计算机系", "交叉信息学院", "自动化系", "经管学院", "考古专业", "其它专业"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, data);
+        spinner.setAdapter(adapter);
 
         upload_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +77,10 @@ public class PublishFragment extends Fragment {
             public void onClick(View v) {
                 String strTitle = title.getText().toString();
                 String strContent = content.getText().toString();
+                String strTheme = spinner.getSelectedItem().toString();
 
                 HashMap<String, String> p = new HashMap<>();
-                p.put("theme", "软件学院");
+                p.put("theme", strTheme);
                 p.put("title", strTitle);
                 p.put("content", strContent);
 

@@ -51,7 +51,7 @@ public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BriefReply reply = replies.get(position);
+        final BriefReply reply = replies.get(position);
         holder.avatar.setImageResource(reply.imageId);
         holder.username.setText(reply.username);
 
@@ -69,6 +69,7 @@ public class BriefReplyAdapter extends RecyclerView.Adapter<BriefReplyAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(context, CommunicateActivity.class);
+                    it.putExtra("recevierId", reply.receiver_id);
                     context.startActivity(it);
                 }
             });

@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
 
-        upload();
+        //upload();
 
         return root;
     }

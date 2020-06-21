@@ -67,6 +67,7 @@ public class CommunicateActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, final int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+
                     final String strInput = input.getText().toString();
                     input.setText("");
                     HashMap<String, String> p = new HashMap<>();
@@ -124,8 +125,7 @@ public class CommunicateActivity extends AppCompatActivity {
     }
 
     private void initMessages() {
-        messages = new ArrayList<>();
-
+        messages.clear();
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -139,9 +139,12 @@ public class CommunicateActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonData = new JSONObject(data);
                         JSONArray jsonMsg = new JSONArray(jsonData.get("chatlist").toString());
+
+                        System.out.println(jsonMsg);
+
                         for (int i=0; i<jsonMsg.length(); i++) {
                             JSONObject msg = jsonMsg.getJSONObject(i);
-                            int sender_id = msg.getInt("senderid");
+                            //int sender_id = msg.getInt("senderid");
                             int receiver_id = msg.getInt("receiverid");
                             String content = msg.getString("content");
 
@@ -176,18 +179,5 @@ public class CommunicateActivity extends AppCompatActivity {
         };
 
         HttpReq.sendOkHttpGetRequest("/friend/msg?friendId=" + receiverId, callback);
-
-//        Message message1 = new Message("你好", 0);
-//        messages.add(message1);
-//        Message message2 = new Message("我要起飞了", 0);
-//        messages.add(message2);
-//        Message message3 = new Message("？？？", 1);
-//        messages.add(message3);
-//        Message message4 = new Message("李在赣神魔", 1);
-//        messages.add(message4);
-//        Message message5 = new Message("飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞飞", 1);
-//        messages.add(message5);
-//        Message message6 = new Message("李时珍滴皮，我金牌港c接下来将一次不死并且超神！", 0);
-//        messages.add(message6);
     }
 }

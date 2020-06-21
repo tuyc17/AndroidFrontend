@@ -129,7 +129,7 @@ public class ChangeAvatarActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.isSuccessful()) {
-                    System.out.println("yes");
+                    //System.out.println("yes");
                 }
                 else {
                     System.out.println(response.code());
