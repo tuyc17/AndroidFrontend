@@ -47,7 +47,7 @@ public class BriefUserAdapter extends RecyclerView.Adapter<BriefUserAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BriefUser user = users.get(position);
+        final BriefUser user = users.get(position);
         holder.avatar.setImageResource(user.imageId);
         holder.username.setText(user.username);
 
@@ -55,6 +55,7 @@ public class BriefUserAdapter extends RecyclerView.Adapter<BriefUserAdapter.View
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(context, ProfileActivity.class);
+                it.putExtra("authorId", user.id);
                 context.startActivity(it);
             }
         });
