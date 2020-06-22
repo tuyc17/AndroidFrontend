@@ -33,7 +33,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/updownline"
                     android:gravity="center"
-                    android:text="你关注的对象" />
+                    android:text="你被关注的" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler1"
@@ -49,7 +49,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/updownline"
                     android:gravity="center"
-                    android:text="你被关注" />
+                    android:text="你关注的" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler"
