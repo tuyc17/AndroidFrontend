@@ -186,20 +186,20 @@ public class ProfileActivity extends AppCompatActivity {
                     }
 
                     if(code == 200) {
-                        isFollow = false;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btn.setText("关注");
-                            }
-                        });
-                    }
-                    else {
                         isFollow = true;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 btn.setText("已关注");
+                            }
+                        });
+                    }
+                    else {
+                        isFollow = false;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btn.setText("关注");
                             }
                         });
                     }

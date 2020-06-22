@@ -129,7 +129,10 @@ public class CommunicateFragment extends Fragment {
                             int id = friend.getInt("id");
 
                             BriefReply reply = new BriefReply(avatar, nickname, id);
-                            replies.add(reply);
+
+                            if(!isSame(reply)) {
+                                replies.add(reply);
+                            }
                         }
 
                         getActivity().runOnUiThread(new Runnable() {
@@ -151,13 +154,14 @@ public class CommunicateFragment extends Fragment {
         };
 
         HttpReq.sendOkHttpGetRequest("/friend/follower", callback2);
+    }
 
-//        for (int i=0; i< 10; i++)
-//        {
-//            BriefReply reply1 = new BriefReply(R.drawable.ic_launcher_background, "用户名称", "消息简介");
-//            replies.add(reply1);
-//        }
-
-
+    private boolean isSame(BriefReply reply) {
+        for (int i=0; i<replies.size(); i++) {
+            if(replies.get(i).receiver_id == reply.receiver_id ) {
+                return true;
+            }
+        }
+        return false;
     }
 }
