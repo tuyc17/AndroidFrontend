@@ -30,9 +30,12 @@ import okhttp3.Response;
 
 public class CommunicateFragment extends Fragment {
     private List<BriefReply> replies = new ArrayList<>();
-    private int position;
     private BriefReplyAdapter adapter;
 
+    private List<BriefReply> replies1 = new ArrayList<>();
+    private BriefReplyAdapter adapter1;
+
+    private int position;
     public CommunicateFragment(int index) {
         this.position = index;
     }
@@ -57,6 +60,12 @@ public class CommunicateFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new BriefReplyAdapter(getActivity(), position, replies);
         recyclerView.setAdapter(adapter);
+
+        RecyclerView recyclerView1 = root.findViewById(R.id.recycler1);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
+        recyclerView1.setLayoutManager(layoutManager1);
+        adapter1 = new BriefReplyAdapter(getActivity(), position, replies1);
+        recyclerView1.setAdapter(adapter1);
 
         initReply();
 
@@ -88,12 +97,12 @@ public class CommunicateFragment extends Fragment {
                             replies.add(reply);
                         }
 
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                adapter.notifyDataSetChanged();
-//                            }
-//                        });
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -129,16 +138,13 @@ public class CommunicateFragment extends Fragment {
                             int id = friend.getInt("id");
 
                             BriefReply reply = new BriefReply(avatar, nickname, id);
-
-                            if(!isSame(reply)) {
-                                replies.add(reply);
-                            }
+                            replies1.add(reply);
                         }
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                adapter.notifyDataSetChanged();
+                                adapter1.notifyDataSetChanged();
                             }
                         });
 
@@ -154,14 +160,5 @@ public class CommunicateFragment extends Fragment {
         };
 
         HttpReq.sendOkHttpGetRequest("/friend/follower", callback2);
-    }
-
-    private boolean isSame(BriefReply reply) {
-        for (int i=0; i<replies.size(); i++) {
-            if(replies.get(i).receiver_id == reply.receiver_id ) {
-                return true;
-            }
-        }
-        return false;
     }
 }
