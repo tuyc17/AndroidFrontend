@@ -41,6 +41,7 @@ public class CommunicateActivity extends AppCompatActivity {
     private MessageAdapter adapter;
     private EditText input;
     private RecyclerView recyclerView;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,18 +110,18 @@ public class CommunicateActivity extends AppCompatActivity {
 
         initMessages();
 
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 initMessages();
             }
         }, 1000, 2000);
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==android.R.id.home) {
+            timer.cancel();
             finish();
         }
         return super.onOptionsItemSelected(item);

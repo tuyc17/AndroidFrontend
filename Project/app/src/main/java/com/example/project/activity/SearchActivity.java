@@ -72,7 +72,6 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initUser() {
-        List<Result> users = new ArrayList<>();
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -81,10 +80,37 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    try{
+                        JSONObject jsonData = new JSONObject(response.body().string());
+                        JSONArray jsonUser = new JSONArray(jsonData.get("users").toString());
+
+                        for(int i=0; i<jsonUser.length(); i++) {
+                            JSONObject user = jsonUser.getJSONObject(i);
+                            String nickname = user.getString("nickName");
+                            int avatar = user.getInt("avatar");
+                            int id = user.getInt("id");
+                            Result result = new Result(avatar, nickname, "", "", "", id, -1);
+                            results.add(result);
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("----------------------------");
+                }
 
             }
         };
-        //HttpReq.sendOkHttpGetRequest();
+        HttpReq.sendOkHttpGetRequest("/user/search?target="+query, callback);
 
     }
 
@@ -101,14 +127,17 @@ public class SearchActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonData = new JSONObject(response.body().string());
                         final JSONArray jsonArticles = new JSONArray(jsonData.get("articles").toString());
+
+                        System.out.println(jsonArticles);
+
                         for (int i=0; i<jsonArticles.length(); i++) {
                             JSONObject article = jsonArticles.getJSONObject(i);
 
                             final int id = article.getInt("id");
-                            final String title = article.getString("articlename");
+                            final String title = article.getString("articleName");
                             final String content = article.getString("content");
-                            final String publishtime = article.getString("publishtime").split("T")[0];
-                            final int authorid = article.getInt("authorid");
+                            final String publishtime = article.getString("publishTime").split("T")[0];
+                            final int authorid = article.getInt("authorId");
 
                             Callback c = new Callback() {
                                 @Override
@@ -160,7 +189,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         };
 
-        HttpReq.sendOkHttpGetRequest("/article/search?target="+query, callback);
+        HttpReq.sendOkHttpGetRequest("/article/fakesearch?target="+query, callback);
     }
 
 }

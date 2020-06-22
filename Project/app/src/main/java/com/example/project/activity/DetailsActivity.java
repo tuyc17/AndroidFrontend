@@ -7,10 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.TestLooperManager;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -29,21 +33,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.Headers;
+import okhttp3.internal.http2.Header;
+
 
 public class DetailsActivity extends AppCompatActivity {
 
     private List<Commend> commends = new ArrayList<>();
     private SharedPreferences preferences;
     private CommendAdapter adapter;
+    private MediaPlayer mediaPlayer = null;
+    private SurfaceHolder surfaceHolder;
 
     private ImageView img;
     private SurfaceView video;
@@ -98,6 +111,10 @@ public class DetailsActivity extends AppCompatActivity {
         video = findViewById(R.id.video);
         img.setVisibility(View.GONE);
         video.setVisibility(View.GONE);
+
+        surfaceHolder = video.getHolder();
+        //surfaceHolder.addCallback(this);
+        surfaceHolder.setFixedSize(320, 220);
 
         initImg();
         initVideo();
@@ -311,10 +328,40 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void initImg() {
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    if(response.body() != null) {
+                        InputStream inputStream= response.body().byteStream();
+                        //将输入流数据转化为Bitmap位图数据
+                        final Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                img.setImageBitmap(bitmap);
+                                img.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                }
+                else {
+                    System.out.println(response.code());
+                }
+            }
+        };
+
+        HttpReq.sendOkHttpGetRequest("/article/download?articleId="+id, callback);
     }
 
     private void initVideo() {
+
 
     }
 

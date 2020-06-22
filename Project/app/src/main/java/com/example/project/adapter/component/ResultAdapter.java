@@ -79,6 +79,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
                 public void onClick(View v) {
                     //跳转到用户详情页
                     Intent it = new Intent(context, ProfileActivity.class);
+                    it.putExtra("authorId", result.id);
                     context.startActivity(it);
                 }
             });

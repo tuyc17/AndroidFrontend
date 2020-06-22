@@ -27,16 +27,23 @@ import com.example.project.viewmodel.PublishViewModel;
 import com.example.project.web.HttpReq;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 public class PublishFragment extends Fragment {
     private Bitmap img;
+    private File imgFile;
 
     private PublishViewModel mViewModel;
     private EditText title;
@@ -99,6 +106,32 @@ public class PublishFragment extends Fragment {
                                     Toast.makeText(getActivity(), "文章发表成功！", Toast.LENGTH_SHORT).show();
                                 }
                             });
+
+                            if(imgFile != null) {
+                                //文件上传
+                                int id = 0;
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response.body().string());
+                                    id = jsonObject.getInt("id");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Callback c = new Callback() {
+                                    @Override
+                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                                    }
+
+                                    @Override
+                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                        if(response.isSuccessful()) {
+                                            System.out.println("-----------------------------");
+                                        }
+                                    }
+                                };
+                                HttpReq.uploadImg("/article/upload", c, id, imgFile);
+                            }
                         }
                         else {
                             System.out.println(response.code());
@@ -126,8 +159,25 @@ public class PublishFragment extends Fragment {
             Uri uri = data.getData();
             try {
                 img = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
+                imgFile = new File(getActivity().getCacheDir(), "tmp");
+                if(imgFile.exists()) {
+                    imgFile.delete();
+                    imgFile = new File(getActivity().getCacheDir(), "tmp");
+                }
+                imgFile.createNewFile();
 
-            } catch (IOException e) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                img.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                byte[] bitmapdata = bos.toByteArray();
+
+                // write the bytes in file
+                FileOutputStream fos = new FileOutputStream(imgFile);
+                fos.write(bitmapdata);
+                fos.flush();
+                fos.close();
+
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
