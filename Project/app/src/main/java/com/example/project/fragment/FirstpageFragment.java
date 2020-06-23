@@ -1,7 +1,5 @@
 package com.example.project.fragment;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -18,12 +16,9 @@ import android.widget.SearchView;
 import com.example.project.R;
 import com.example.project.activity.SearchActivity;
 import com.example.project.adapter.FirstpagePagerAdapter;
-import com.example.project.viewmodel.FirstpageViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 public class FirstpageFragment extends Fragment {
-
-    private FirstpageViewModel mViewModel;
 
     public static FirstpageFragment newInstance() {
         return new FirstpageFragment();
@@ -59,12 +54,4 @@ public class FirstpageFragment extends Fragment {
 
         return root;
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(FirstpageViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }

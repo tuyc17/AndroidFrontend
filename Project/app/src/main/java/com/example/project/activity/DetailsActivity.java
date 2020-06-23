@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.TestLooperManager;
 import android.view.KeyEvent;
@@ -18,6 +19,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -33,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,16 +53,21 @@ import okhttp3.Headers;
 import okhttp3.internal.http2.Header;
 
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements SurfaceHolder.Callback{
 
     private List<Commend> commends = new ArrayList<>();
     private SharedPreferences preferences;
     private CommendAdapter adapter;
-    private MediaPlayer mediaPlayer = null;
+
+    private SurfaceView video;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
     private SurfaceHolder surfaceHolder;
+    private Button play_btn;
+    private Button stop_btn;
+    private Button replay_btn;
+    private Button change_btn;
 
     private ImageView img;
-    private SurfaceView video;
     private ImageView avatar;
     private TextView username;
     private TextView date;
@@ -75,6 +83,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     private int id = -1;
     private int authorId= -1;
+    private int speed = 1;
+    private String path;
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,15 +123,23 @@ public class DetailsActivity extends AppCompatActivity {
         img.setVisibility(View.GONE);
         video.setVisibility(View.GONE);
 
-        surfaceHolder = video.getHolder();
-        //surfaceHolder.addCallback(this);
-        surfaceHolder.setFixedSize(320, 220);
+        play_btn = findViewById(R.id.play_btn);
+        stop_btn = findViewById(R.id.stop_btn);
+        replay_btn = findViewById(R.id.replay_btn);
+        change_btn = findViewById(R.id.change_btn);
 
+        play_btn.setVisibility(View.GONE);
+        stop_btn.setVisibility(View.GONE);
+        replay_btn.setVisibility(View.GONE);
+        change_btn.setVisibility(View.GONE);
+
+        surfaceHolder = video.getHolder();
+        surfaceHolder.addCallback(this);
+
+        initSurface();
         initImg();
         initVideo();
 
-        //todo
-        //实现recycler的吸顶效果
         recyclerView = findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -320,6 +339,18 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            mediaPlayer = MediaPlayer.create(this, uri);
+            mediaPlayer.setDisplay(surfaceHolder);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==android.R.id.home) {
             finish();
@@ -337,9 +368,8 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.isSuccessful()) {
-                    if(response.body() != null) {
-                        InputStream inputStream= response.body().byteStream();
-                        //将输入流数据转化为Bitmap位图数据
+                    try {
+                        InputStream inputStream = response.body().byteStream();
                         final Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
 
                         runOnUiThread(new Runnable() {
@@ -349,6 +379,10 @@ public class DetailsActivity extends AppCompatActivity {
                                 img.setVisibility(View.VISIBLE);
                             }
                         });
+
+                        inputStream.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 else {
@@ -360,9 +394,133 @@ public class DetailsActivity extends AppCompatActivity {
         HttpReq.sendOkHttpGetRequest("/article/download?articleId="+id, callback);
     }
 
+    private void initSurface() {
+        play_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                play_btn.setEnabled(false);
+                stop_btn.setEnabled(true);
+                replay_btn.setEnabled(true);
+                change_btn.setEnabled(true);
+            }
+        });
+
+        stop_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.pause();
+                play_btn.setEnabled(true);
+                stop_btn.setEnabled(false);
+                replay_btn.setEnabled(true);
+                change_btn.setEnabled(true);
+            }
+        });
+
+        replay_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                play_btn.setEnabled(false);
+                stop_btn.setEnabled(true);
+                replay_btn.setEnabled(true);
+                change_btn.setEnabled(true);
+
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = MediaPlayer.create(DetailsActivity.this, uri);
+                mediaPlayer.setDisplay(surfaceHolder);
+                mediaPlayer.start();
+            }
+        });
+
+        change_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(speed == 1) {
+                    mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed((float)2.0));
+                    speed = 2;
+                }
+                else if(speed == 2) {
+                    mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed((float)0.5));
+                    speed = 3;
+                }
+                else if(speed == 3) {
+                    mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed((float)1.0));
+                    speed = 1;
+                }
+            }
+        });
+    }
+
     private void initVideo() {
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
+            }
 
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    try {
+                        InputStream inputStream = response.body().byteStream();
+
+                        File file = new File(getCacheDir(), "temp.mp4");
+                        if(file.exists()) {
+                            file.delete();
+                            file = new File(getCacheDir(), "temp.mp4");
+                        }
+                        file.createNewFile();
+                        path = file.getAbsolutePath();
+                        uri = Uri.fromFile(file);
+
+                        FileOutputStream fileOutputStream = new FileOutputStream(file);
+                        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                        byte[] bytes = new byte[1024];
+                        do {
+                            int num = inputStream.read(bytes);
+                            if(num <= 0) {
+                                break;
+                            }
+                            bufferedOutputStream.write(bytes, 0, num);
+                        } while (true);
+
+                        mediaPlayer.setDataSource(path);
+                        mediaPlayer.prepare();
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                video.setVisibility(View.VISIBLE);
+                                play_btn.setVisibility(View.VISIBLE);
+                                stop_btn.setVisibility(View.VISIBLE);
+                                replay_btn.setVisibility(View.VISIBLE);
+                                change_btn.setVisibility(View.VISIBLE);
+
+                                play_btn.setEnabled(false);
+                                stop_btn.setEnabled(true);
+                                replay_btn.setEnabled(true);
+                                change_btn.setEnabled(true);
+
+                                mediaPlayer.start();
+                            }
+                        });
+
+                        inputStream.close();
+                        bufferedOutputStream.flush();
+                        bufferedOutputStream.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                else {
+                    System.out.println(response.code());
+                }
+            }
+        };
+
+        HttpReq.sendOkHttpGetRequest("/article/download?articleId="+id, callback);
     }
 
     private void initCommends() {
@@ -522,5 +680,23 @@ public class DetailsActivity extends AppCompatActivity {
             }
         };
         HttpReq.sendOkHttpGetRequest("/article/isfavorited?articleId="+id, callback2);
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        mediaPlayer.setDisplay(surfaceHolder);
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+        mediaPlayer.release();
     }
 }

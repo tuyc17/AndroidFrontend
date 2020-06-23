@@ -51,7 +51,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 final String strOldPassword = old_password.getText().toString();
                 final String strNewPassword = new_password.getText().toString();
 
-                // TODO: 判断old password是否正确
                 String old = mPreferences.getString("password", "");
                 if (!strOldPassword.equals(old)) {
                     Toast.makeText(ChangePasswordActivity.this, "原密码密码不正确！", Toast.LENGTH_SHORT).show();

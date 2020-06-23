@@ -138,8 +138,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        //Todo
-        //该用户发表过的文章
         RecyclerView recyclerView = findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

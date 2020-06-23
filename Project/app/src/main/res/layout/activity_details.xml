@@ -115,11 +115,60 @@
                         android:background="#FFFFFF"
                         tools:srcCompat="@tools:sample/avatars" />
 
-                    <SurfaceView
-                        android:id="@+id/video"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0" />
+                        android:layout_weight="0"
+                        android:background="#FFFFFF"
+                        android:orientation="vertical">
+
+                        <SurfaceView
+                            android:id="@+id/video"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="0" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_weight="0"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/play_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="开始" />
+
+                            <Button
+                                android:id="@+id/stop_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="暂停" />
+
+                            <Button
+                                android:id="@+id/replay_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="重新播放" />
+
+                            <Button
+                                android:id="@+id/change_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="变速" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/textView5"

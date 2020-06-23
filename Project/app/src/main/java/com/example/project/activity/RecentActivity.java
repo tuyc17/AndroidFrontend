@@ -72,8 +72,6 @@ public class RecentActivity extends AppCompatActivity {
                         JSONObject jsonData = new JSONObject(response.body().string());
                         final JSONArray jsonArticles = new JSONArray(jsonData.get("articles").toString());
 
-                        System.out.println(jsonArticles);
-
                         for (int i=0; i<jsonArticles.length(); i++) {
                             JSONObject article = jsonArticles.getJSONObject(i);
 
@@ -101,8 +99,6 @@ public class RecentActivity extends AppCompatActivity {
                                             String nickname = j.getString("nickname");
                                             Summary summary = new Summary(avatar, nickname, publishtime, title, content, id, authorid);
                                             summaryList.add(summary);
-
-                                            System.out.println(summary);
 
                                             if(summaryList.size() == jsonArticles.length()) {
                                                 runOnUiThread(new Runnable() {

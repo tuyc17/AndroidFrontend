@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.project.activity.ActionActivity;
 import com.example.project.activity.CollectActivity;
@@ -22,7 +21,6 @@ import com.example.project.activity.VerifyActivity;
 import com.example.project.activity.SettingActivity;
 
 import com.example.project.R;
-import com.example.project.viewmodel.HomeViewModel;
 import com.example.project.web.HttpReq;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,12 +48,8 @@ public class HomeFragment extends Fragment {
 
     private SharedPreferences mPreferences;
 
-    private HomeViewModel homeViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
